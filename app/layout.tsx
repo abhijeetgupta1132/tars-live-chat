@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-
+import UserSync from "@/components/UserSync";
 import { ConvexClientProvider } from "@/providers/ConvexClientProvider";
 
 export const metadata: Metadata = {
@@ -18,7 +18,10 @@ export default function RootLayout({
     <ClerkProvider>
       <ConvexClientProvider>
         <html lang="en">
-          <body className="min-h-screen">{children}</body>
+          <body className="min-h-screen">
+            <UserSync />
+            {children}
+          </body>
         </html>
       </ConvexClientProvider>
     </ClerkProvider>

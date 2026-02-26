@@ -6,7 +6,7 @@ const schema = defineSchema({
     clerkId: v.string(),
     name: v.string(),
     email: v.string(),
-    image: v.string(),
+    image: v.optional(v.string()),
   }).index("by_clerk_id", ["clerkId"]),
 
   conversations: defineTable({
