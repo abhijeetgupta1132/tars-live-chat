@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
+import { ConvexClientProvider } from "@/providers/ConvexClientProvider";
+
 export const metadata: Metadata = {
   title: "Tars Live Chat",
   description: "Realtime chat app",
@@ -14,9 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="min-h-screen">{children}</body>
-      </html>
+      <ConvexClientProvider>
+        <html lang="en">
+          <body className="min-h-screen">{children}</body>
+        </html>
+      </ConvexClientProvider>
     </ClerkProvider>
   );
 }
