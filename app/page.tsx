@@ -1,14 +1,18 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import UsersList from "@/components/UsersList";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex">
       <SignedOut>
-        <SignInButton />
+        <div className="p-10">
+          <SignInButton />
+        </div>
       </SignedOut>
 
       <SignedIn>
-        <UserButton />
+        <UsersList />
+        <div className="flex-1 p-10">Select a user to start chat</div>
       </SignedIn>
     </main>
   );
