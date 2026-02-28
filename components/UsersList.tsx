@@ -4,7 +4,13 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-export default function UsersList() {
+/** ✅ ADD PROPS TYPE */
+interface UsersListProps {
+  onSelectConversation: (id: string) => void;
+}
+
+/** ✅ ACCEPT PROP */
+export default function UsersList({ onSelectConversation }: UsersListProps) {
   const { user } = useUser();
 
   const users = useQuery(
@@ -25,13 +31,15 @@ export default function UsersList() {
     return <div className="p-4">Loading users...</div>;
   }
 
-  const handleClick = async (otherUserId: any) => {
-    await createConversation({
+  /** ✅ FIXED CLICK HANDLER */
+  const handleClick = async (otherUserId: string) => {
+    const conversationId = await createConversation({
       userId: me._id,
       otherUserId,
     });
 
-    alert("Conversation ready ✅ (chat UI next)");
+    // 🔥 IMPORTANT: notify parent
+    onSelectConversation(conversationId);
   };
 
   return (

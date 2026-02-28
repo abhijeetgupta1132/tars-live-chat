@@ -1,9 +1,25 @@
+"use client";
+
+import { useState } from "react";
 import UsersList from "@/components/UsersList";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import ChatWindow from "@/components/ChatWindow";
+import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function Home() {
+  const [conversationId, setConversationId] = useState<string | null>(null);
+
+  const { user } = useUser();
+
+  // 🔥 get current convex user
+  const currentUser = useQuery(
+    api.users.getUserByClerkId,
+    user ? { clerkId: user.id } : "skip",
+  );
+
   return (
-    <main className="flex">
+    <main className="flex h-screen">
       <SignedOut>
         <div className="p-10">
           <SignInButton />
@@ -11,8 +27,14 @@ export default function Home() {
       </SignedOut>
 
       <SignedIn>
-        <UsersList />
-        <div className="flex-1 p-10">Select a user to start chat</div>
+        {/* LEFT SIDEBAR */}
+        <UsersList onSelectConversation={setConversationId} />
+
+        {/* RIGHT CHAT */}
+        <ChatWindow
+          conversationId={conversationId}
+          currentUserId={currentUser?._id ?? null}
+        />
       </SignedIn>
     </main>
   );
