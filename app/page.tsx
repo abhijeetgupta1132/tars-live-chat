@@ -6,9 +6,12 @@ import ChatWindow from "@/components/ChatWindow";
 import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function Home() {
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversationId, setConversationId] =
+    useState<Id<"conversations"> | null>(null);
+
   const [otherUserName, setOtherUserName] = useState<string | null>(null);
 
   const { user } = useUser();
@@ -18,7 +21,7 @@ export default function Home() {
     user ? { clerkId: user.id } : "skip",
   );
 
-  const handleSelectConversation = (id: string, name: string) => {
+  const handleSelectConversation = (id: Id<"conversations">, name: string) => {
     setConversationId(id);
     setOtherUserName(name);
   };

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 type Props = {
-  conversationId: string | null;
-  currentUserId: string | null;
+  conversationId: Id<"conversations"> | null;
+  currentUserId: Id<"users"> | null;
   otherUserName?: string | null;
 };
 
@@ -17,22 +18,12 @@ export default function ChatWindow({
 }: Props) {
   const [message, setMessage] = useState("");
 
-  // 🔥 auto scroll ref
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  // 🔥 messages query
   const messages = useQuery(
     api.messages.getMessages,
     conversationId ? { conversationId } : "skip",
   );
 
-  // 🔥 send mutation
   const sendMessage = useMutation(api.messages.sendMessage);
-
-  // 🔥 auto scroll when new message comes
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const handleSend = async () => {
     if (!message.trim() || !conversationId || !currentUserId) return;
@@ -46,7 +37,6 @@ export default function ChatWindow({
     setMessage("");
   };
 
-  // 🔥 empty state
   if (!conversationId) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500">
@@ -57,13 +47,13 @@ export default function ChatWindow({
 
   return (
     <div className="flex flex-col flex-1 h-screen">
-      {/* ✅ HEADER */}
-      <div className="border-b px-4 py-3 font-semibold">
+      {/* Header */}
+      <div className="p-4 border-b font-semibold">
         {otherUserName || "Conversation"}
       </div>
 
-      {/* ✅ MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2 flex flex-col bg-gray-50">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-2 flex flex-col">
         {messages?.map((msg) => {
           const isMe = msg.senderId === currentUserId;
 
@@ -80,12 +70,9 @@ export default function ChatWindow({
             </div>
           );
         })}
-
-        {/* 🔥 scroll anchor */}
-        <div ref={bottomRef} />
       </div>
 
-      {/* ✅ INPUT */}
+      {/* Input */}
       <div className="p-4 border-t flex gap-2">
         <input
           value={message}
@@ -94,11 +81,11 @@ export default function ChatWindow({
             if (e.key === "Enter") handleSend();
           }}
           placeholder="Type message..."
-          className="flex-1 border rounded-lg px-3 py-2 outline-none"
+          className="flex-1 border rounded-lg px-3 py-2"
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
         >
           Send
         </button>

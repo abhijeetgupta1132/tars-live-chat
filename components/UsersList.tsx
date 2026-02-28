@@ -3,9 +3,10 @@
 import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 type Props = {
-  onSelectConversation: (id: string, name: string) => void;
+  onSelectConversation: (id: Id<"conversations">, name: string) => void;
 };
 
 export default function UsersList({ onSelectConversation }: Props) {
@@ -16,13 +17,13 @@ export default function UsersList({ onSelectConversation }: Props) {
     user ? { clerkId: user.id } : "skip",
   );
 
-  const createConversation = useMutation(
-    api.conversations.createOrGetConversation,
-  );
-
   const me = useQuery(
     api.users.getUserByClerkId,
     user ? { clerkId: user.id } : "skip",
+  );
+
+  const createConversation = useMutation(
+    api.conversations.createOrGetConversation,
   );
 
   if (!users || !me) {
@@ -35,7 +36,6 @@ export default function UsersList({ onSelectConversation }: Props) {
       otherUserId: otherUser._id,
     });
 
-    // 🔥 send BOTH id and name to parent
     onSelectConversation(conversationId, otherUser.name);
   };
 
@@ -44,7 +44,7 @@ export default function UsersList({ onSelectConversation }: Props) {
       <h2 className="font-bold mb-4">Users</h2>
 
       <div className="space-y-2">
-        {users.map((u) => (
+        {users.map((u: any) => (
           <div
             key={u._id}
             onClick={() => handleUserClick(u)}
