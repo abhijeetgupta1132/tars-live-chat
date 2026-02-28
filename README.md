@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Tars Live Chat
 
-## Getting Started
+A real-time chat application built with Next.js, Convex, and Clerk that enables instant messaging between users with a clean modern UI.
 
-First, run the development server:
+🔴 Live Demo: [https://tars-live-chat-rho.vercel.app/]
+📦 Repository: [https://github.com/abhijeetgupta1132/tars-live-chat]
 
-```bash
+✨ Features
+
+🔐 Authentication with Clerk
+
+⚡ Real-time messaging using Convex
+
+👥 User discovery sidebar
+
+💬 One-to-one conversations
+
+🟢 Live message updates (no refresh)
+
+🕒 Message timestamps
+
+🫧 Modern chat bubble UI
+
+📭 Empty state handling
+
+🚀 Production deployed on Vercel
+
+🏗️ Tech Stack
+
+Frontend
+
+Next.js 16 (App Router)
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Backend
+
+Convex (database + realtime)
+
+Clerk (authentication)
+
+Deployment
+
+Vercel
+
+🧠 Architecture Overview
+Clerk Auth → UserSync → Convex DB
+↓
+UsersList → createOrGetConversation → ChatWindow
+↓
+Real-time messages
+📂 Project Structure
+app/
+page.tsx
+
+components/
+UsersList.tsx
+ChatWindow.tsx
+UserSync.tsx
+
+convex/
+users.ts
+messages.ts
+conversations.ts
+schema.ts
+⚙️ Environment Variables
+
+Create .env.local:
+
+NEXT_PUBLIC_CONVEX_URL=your_convex_url
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key
+CLERK_SECRET_KEY=your_secret
+🧪 Local Development
+
+# install deps
+
+npm install
+
+# run convex
+
+npx convex dev
+
+# start app
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
+🚀 Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is deployed on Vercel.
 
-## Learn More
+Steps
 
-To learn more about Next.js, take a look at the following resources:
+Push to GitHub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Import repo in Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add environment variables
 
-## Deploy on Vercel
+Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🔥 Real-Time Test (Important)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To verify realtime:
+
+Open app in two browsers
+
+Login with different users
+
+Send message
+
+✅ Messages appear instantly without refresh.
+
+📌 Future Improvements
+
+Group chat support
+
+Online presence indicator
+
+Message read receipts
+
+File/image sharing
+
+Typing indicators
+
+👨‍💻 Author
+
+Abhijeet Gupta
+
+GitHub: https://github.com/abhijeetgupta1132
+
+LinkedIn: https://www.linkedin.com/in/abhijeet-gupta-807876381/
