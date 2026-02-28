@@ -9,14 +9,19 @@ import { api } from "@/convex/_generated/api";
 
 export default function Home() {
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [otherUserName, setOtherUserName] = useState<string | null>(null);
 
   const { user } = useUser();
 
-  // 🔥 get current convex user
   const currentUser = useQuery(
     api.users.getUserByClerkId,
     user ? { clerkId: user.id } : "skip",
   );
+
+  const handleSelectConversation = (id: string, name: string) => {
+    setConversationId(id);
+    setOtherUserName(name);
+  };
 
   return (
     <main className="flex h-screen">
@@ -27,13 +32,12 @@ export default function Home() {
       </SignedOut>
 
       <SignedIn>
-        {/* LEFT SIDEBAR */}
-        <UsersList onSelectConversation={setConversationId} />
+        <UsersList onSelectConversation={handleSelectConversation} />
 
-        {/* RIGHT CHAT */}
         <ChatWindow
           conversationId={conversationId}
           currentUserId={currentUser?._id ?? null}
+          otherUserName={otherUserName}
         />
       </SignedIn>
     </main>

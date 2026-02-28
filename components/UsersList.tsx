@@ -4,13 +4,11 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-/** ✅ ADD PROPS TYPE */
-interface UsersListProps {
-  onSelectConversation: (id: string) => void;
-}
+type Props = {
+  onSelectConversation: (id: string, name: string) => void;
+};
 
-/** ✅ ACCEPT PROP */
-export default function UsersList({ onSelectConversation }: UsersListProps) {
+export default function UsersList({ onSelectConversation }: Props) {
   const { user } = useUser();
 
   const users = useQuery(
@@ -31,15 +29,14 @@ export default function UsersList({ onSelectConversation }: UsersListProps) {
     return <div className="p-4">Loading users...</div>;
   }
 
-  /** ✅ FIXED CLICK HANDLER */
-  const handleClick = async (otherUserId: string) => {
+  const handleUserClick = async (otherUser: any) => {
     const conversationId = await createConversation({
       userId: me._id,
-      otherUserId,
+      otherUserId: otherUser._id,
     });
 
-    // 🔥 IMPORTANT: notify parent
-    onSelectConversation(conversationId);
+    // 🔥 send BOTH id and name to parent
+    onSelectConversation(conversationId, otherUser.name);
   };
 
   return (
@@ -50,7 +47,7 @@ export default function UsersList({ onSelectConversation }: UsersListProps) {
         {users.map((u) => (
           <div
             key={u._id}
-            onClick={() => handleClick(u._id)}
+            onClick={() => handleUserClick(u)}
             className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 cursor-pointer"
           >
             <div className="font-medium">{u.name}</div>

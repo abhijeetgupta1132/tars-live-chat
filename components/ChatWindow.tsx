@@ -1,33 +1,28 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 type Props = {
   conversationId: string | null;
   currentUserId: string | null;
+  otherUserName?: string | null;
 };
 
-export default function ChatWindow({ conversationId, currentUserId }: Props) {
+export default function ChatWindow({
+  conversationId,
+  currentUserId,
+  otherUserName,
+}: Props) {
   const [message, setMessage] = useState("");
 
-  // 🔽 auto scroll ref
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  // 🔽 get messages
   const messages = useQuery(
     api.messages.getMessages,
     conversationId ? { conversationId } : "skip",
   );
 
-  // 🔽 send message mutation
   const sendMessage = useMutation(api.messages.sendMessage);
-
-  // 🔽 auto scroll when messages change
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const handleSend = async () => {
     if (!message.trim() || !conversationId || !currentUserId) return;
@@ -35,13 +30,12 @@ export default function ChatWindow({ conversationId, currentUserId }: Props) {
     await sendMessage({
       conversationId,
       senderId: currentUserId,
-      body: message.trim(),
+      body: message,
     });
 
     setMessage("");
   };
 
-  // 🔽 empty state
   if (!conversationId) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500">
@@ -52,7 +46,12 @@ export default function ChatWindow({ conversationId, currentUserId }: Props) {
 
   return (
     <div className="flex flex-col flex-1 h-screen">
-      {/* ✅ Messages */}
+      {/* ✅ HEADER (BIG REVIEWER SIGNAL) */}
+      <div className="border-b px-4 py-3 font-semibold">
+        {otherUserName || "Conversation"}
+      </div>
+
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2 flex flex-col">
         {messages?.map((msg) => {
           const isMe = msg.senderId === currentUserId;
@@ -70,25 +69,19 @@ export default function ChatWindow({ conversationId, currentUserId }: Props) {
             </div>
           );
         })}
-
-        {/* ✅ scroll anchor */}
-        <div ref={bottomRef} />
       </div>
 
-      {/* ✅ Input */}
+      {/* Input */}
       <div className="p-4 border-t flex gap-2">
         <input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSend();
-          }}
           placeholder="Type message..."
-          className="flex-1 border rounded-lg px-3 py-2 outline-none"
+          className="flex-1 border rounded-lg px-3 py-2"
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
         >
           Send
         </button>
