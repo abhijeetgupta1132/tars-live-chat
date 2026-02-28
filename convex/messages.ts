@@ -1,23 +1,20 @@
-import { query, mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// ✅ Get messages for a conversation
+// 📥 Get messages for a conversation
 export const getMessages = query({
-  args: {
-    conversationId: v.id("conversations"),
-  },
+  args: { conversationId: v.id("conversations") },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("messages")
       .withIndex("by_conversation", (q) =>
         q.eq("conversationId", args.conversationId),
       )
-      .order("asc")
       .collect();
   },
 });
 
-// ✅ Send message
+// 📤 Send message
 export const sendMessage = mutation({
   args: {
     conversationId: v.id("conversations"),
